@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-admin-user
+      author: your_name
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: first_name
+                  value: "Admin"
+              - column:
+                  name: last_name
+                  value: "System"
+              - column:
+                  name: email
+                  value: "admin@bank.com"
+              - column:
+                  name: password
+                  value: "$2a$10$WdzLNWQt3fEBgRRrv6kl0.d3X3K9/lDh5dreGLzi.mioaORig4dPu"
+              - column:
+                  name: role
+                  value: "ROLE_ADMIN"
+              - column:
+                  name: created_at
+                  valueDate: "2024-01-01T00:00:00"

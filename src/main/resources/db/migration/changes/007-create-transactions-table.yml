@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-create-transactions-table
+      author: sergeev-alexander
+      changes:
+        - createTable:
+            tableName: transactions
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: card_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: decimal(20,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: transactions
+            baseColumnNames: card_id
+            constraintName: fk_transactions_card_id_cascade
+            referencedTableName: cards
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_transactions_card_id
+            tableName: transactions
+            columns:
+              - column:
+                  name: card_id
+                  descending: false
+
+        - createIndex:
+            indexName: idx_transactions_type
+            tableName: transactions
+            columns:
+              - column:
+                  name: transaction_type
+                  descending: false
+
+        - createIndex:
+            indexName: idx_transactions_created_at
+            tableName: transactions
+            columns:
+              - column:
+                  name: created_at
+                  descending: false
+
+        - createIndex:
+            indexName: idx_transactions_card_type
+            tableName: transactions
+            columns:
+              - column:
+                  name: card_id
+                  descending: false
+              - column:
+                  name: transaction_type
+                  descending: false

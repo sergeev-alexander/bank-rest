@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-card-blocks-table
+      author: sergeev-alexander
+      changes:
+        - createTable:
+            tableName: card_blocks
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: card_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: requested_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: processed_at
+                  type: timestamp
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: card_blocks
+            baseColumnNames: card_id
+            constraintName: fk_card_blocks_card_cascade
+            referencedTableName: cards
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: card_blocks
+            baseColumnNames: user_id
+            constraintName: fk_card_blocks_user_cascade
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_card_blocks_card_id
+            tableName: card_blocks
+            columns:
+              - column:
+                  name: card_id
+                  descending: false
+
+        - createIndex:
+            indexName: idx_card_blocks_user_id
+            tableName: card_blocks
+            columns:
+              - column:
+                  name: user_id
+                  descending: false
+
+        - createIndex:
+            indexName: idx_card_blocks_status
+            tableName: card_blocks
+            columns:
+              - column:
+                  name: status
+                  descending: false

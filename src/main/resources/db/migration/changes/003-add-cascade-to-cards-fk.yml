@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-cascade-to-cards-fk
+      author: sergeev-alexander
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: cards
+            constraintName: fk_cards_user_id
+        - addForeignKeyConstraint:
+            baseTableName: cards
+            baseColumnNames: user_id
+            constraintName: fk_cards_user_id_cascade
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE

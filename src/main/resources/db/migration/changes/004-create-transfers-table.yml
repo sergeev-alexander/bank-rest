@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-transfers-table
+      author: sergeev-alexander
+      changes:
+        - createTable:
+            tableName: transfers
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: from_card_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: to_card_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: decimal(20,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: transfers
+            baseColumnNames: from_card_id
+            constraintName: fk_transfers_from_card_cascade
+            referencedTableName: cards
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: transfers
+            baseColumnNames: to_card_id
+            constraintName: fk_transfers_to_card_cascade
+            referencedTableName: cards
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_transfers_from_card_id
+            tableName: transfers
+            columns:
+              - column:
+                  name: from_card_id
+                  descending: false
+
+        - createIndex:
+            indexName: idx_transfers_to_card_id
+            tableName: transfers
+            columns:
+              - column:
+                  name: to_card_id
+                  descending: false
+
+        - createIndex:
+            indexName: idx_transfers_status
+            tableName: transfers
+            columns:
+              - column:
+                  name: status
+                  descending: false
+
+        - createIndex:
+            indexName: idx_transfers_created_at
+            tableName: transfers
+            columns:
+              - column:
+                  name: created_at
+                  descending: false
