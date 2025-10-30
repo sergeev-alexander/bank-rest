@@ -1,7 +1,10 @@
 package com.example.bankcards.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.bankcards.exception.BankSecurityException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,10 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
@@ -27,39 +26,28 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
-            logger.info("JWT extracted: {}", jwt);
 
             if (jwt != null) {
                 String username = jwtUtils.getUsernameFromToken(jwt);
-                logger.info("Username from token: {}", username);
 
                 if (jwtUtils.validateToken(jwt, userDetailsService.loadUserByUsername(username))) {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    logger.info("User authenticated: {}", username);
 
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    logger.info("Security context set for user: {}", username);
-                } else {
-                    logger.warn("JWT token validation failed for user: {}", username);
                 }
-            } else {
-                logger.warn("No JWT token found in request");
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e.getMessage(), e);
+            throw new BankSecurityException(e.getMessage());
         }
 
         filterChain.doFilter(request, response);

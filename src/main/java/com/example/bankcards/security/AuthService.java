@@ -5,6 +5,7 @@ import com.example.bankcards.dto.RegistrationRequest;
 import com.example.bankcards.entity.Role;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.exception.BankSecurityException;
+import com.example.bankcards.exception.NotFoundException;
 import com.example.bankcards.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,23 +22,27 @@ import java.util.List;
 @Service
 public class AuthService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    public AuthService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       AuthenticationManager authenticationManager,
+                       JwtUtils jwtUtils,
+                       UserDetailsServiceImpl userDetailsService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
+        this.userDetailsService = userDetailsService;
+    }
 
     public User registerUser(RegistrationRequest registrationRequest) {
-        if (userDetailsService.existsByEmail(registrationRequest.getEmail())) {
+        if (userRepository.existsByEmail(registrationRequest.getEmail())) {
             throw new BankSecurityException("Email already exists");
         }
 
@@ -63,7 +68,8 @@ public class AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        User user = userDetailsService.loadUserByEmail(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
 
         return new JwtResponse(jwt, user.getId(), userDetails.getUsername(), roles.get(0));
     }

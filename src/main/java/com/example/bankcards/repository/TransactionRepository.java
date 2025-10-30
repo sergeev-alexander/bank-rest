@@ -23,4 +23,3 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
 
     boolean existsByIdAndCardUserId(Long transactionId, Long userId);
 }
-

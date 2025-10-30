@@ -1,0 +1,1357 @@
+{
+	"info": {
+		"_postman_id": "bank-cards-api-collection",
+		"name": "Bank Cards API - End-to-End Flow",
+		"description": "Complete end-to-end testing flow for Bank Cards Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Admin Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin login successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"adminToken\", response.token);",
+									"pm.collectionVariables.set(\"adminEmail\", response.email);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@bank.com\",\n    \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "Register Test User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User registration successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"user1Id\", response.id);",
+									"pm.collectionVariables.set(\"user1Email\", response.email);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@test.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login Test User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User login successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"user1Token\", response.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@test.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. User Management",
+			"item": [
+				{
+					"name": "Create Test User 2 (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can create user\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"user2Id\", response.id);",
+									"pm.collectionVariables.set(\"user2Email\", response.email);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"email\": \"jane.smith@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"ROLE_USER\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login Test User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User 2 login successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"user2Token\", response.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"jane.smith@test.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "User Cannot Create User (Security Test)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User cannot create other users\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Unauthorized\",\n    \"lastName\": \"User\",\n    \"email\": \"unauthorized@test.com\",\n    \"password\": \"password123\",\n    \"role\": \"ROLE_USER\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Card Management",
+			"item": [
+				{
+					"name": "Create Card 1 for User 1 (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can create card\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"user1Card1Id\", response.id);",
+									"pm.test(\"Card has correct balance\", function () {",
+									"    pm.expect(response.balance).to.eql(1000.00);",
+									"});",
+									"pm.test(\"Card is active\", function () {",
+									"    pm.expect(response.status).to.eql(\"ACTIVE\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": {{user1Id}},\n    \"cardNumber\": \"1234567890123456\",\n    \"expiryDate\": \"2026-12-31\",\n    \"balance\": 1000.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cards",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Card 2 for User 1 (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can create second card for same user\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"user1Card2Id\", response.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": {{user1Id}},\n    \"cardNumber\": \"1111222233334444\",\n    \"expiryDate\": \"2026-12-31\",\n    \"balance\": 300.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cards",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Card for User 2 (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can create card for user 2\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"user2CardId\", response.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": {{user2Id}},\n    \"cardNumber\": \"9876543210987654\",\n    \"expiryDate\": \"2026-12-31\",\n    \"balance\": 500.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cards",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards"
+							]
+						}
+					}
+				},
+				{
+					"name": "User Cannot Create Card (Security Test)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User cannot create cards\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": {{user1Id}},\n    \"cardNumber\": \"5555666677778888\",\n    \"expiryDate\": \"2026-12-31\",\n    \"balance\": 100.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cards",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get My Cards (User 1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User can get own cards\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"User has multiple cards\", function () {",
+									"    pm.expect(response.content.length).to.eql(2);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards/my-cards",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards",
+								"my-cards"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get My Balance (User 1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User can get own balance\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Total balance is correct\", function () {",
+									"    // 1000 + 300 = 1300",
+									"    pm.expect(pm.response.text()).to.eql(\"1300.00\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards/my-balance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards",
+								"my-balance"
+							]
+						}
+					}
+				},
+				{
+					"name": "User Cannot Access Other User's Card (Security Test)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User cannot access other user's card\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards/id/{{user2CardId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards",
+								"id",
+								"{{user2CardId}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Transactions",
+			"item": [
+				{
+					"name": "Deposit to User 1 Card 1 (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Deposit successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Transaction type is DEPOSIT\", function () {",
+									"    pm.expect(response.transactionType).to.eql(\"DEPOSIT\");",
+									"});",
+									"pm.test(\"Amount is correct\", function () {",
+									"    pm.expect(response.amount).to.eql(200.00);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 200.00,\n    \"transactionType\": \"DEPOSIT\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/transactions/deposit/{{user1Card1Id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"transactions",
+								"deposit",
+								"{{user1Card1Id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Withdraw from User 1 Card 1 (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Withdrawal successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Transaction type is WITHDRAW\", function () {",
+									"    pm.expect(response.transactionType).to.eql(\"WITHDRAW\");",
+									"});",
+									"pm.test(\"Amount is correct\", function () {",
+									"    pm.expect(response.amount).to.eql(50.00);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 50.00,\n    \"transactionType\": \"WITHDRAW\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/transactions/withdraw/{{user1Card1Id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"transactions",
+								"withdraw",
+								"{{user1Card1Id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Verify Balance After Transactions (User 1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Balance updated correctly\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    // Card1: 1000 + 200 - 50 = 1150, Card2: 300 = Total: 1450",
+									"    pm.expect(pm.response.text()).to.eql(\"1450.00\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards/my-balance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards",
+								"my-balance"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Transfers",
+			"item": [
+				{
+					"name": "Transfer from User 1 Card 1 to User 1 Card 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Transfer between own cards successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Transfer amount is correct\", function () {",
+									"    pm.expect(response.amount).to.eql(150.00);",
+									"});",
+									"pm.test(\"Transfer status is completed\", function () {",
+									"    pm.expect(response.status).to.eql(\"COMPLETED\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fromCardId\": {{user1Card1Id}},\n    \"toCardId\": {{user1Card2Id}},\n    \"amount\": 150.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/transfers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"transfers"
+							]
+						}
+					}
+				},
+				{
+					"name": "Verify Total Balance After Transfer (User 1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Total balance unchanged after internal transfer\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    // Total should remain 1450 (internal transfer)",
+									"    pm.expect(pm.response.text()).to.eql(\"1450.00\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards/my-balance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards",
+								"my-balance"
+							]
+						}
+					}
+				},
+				{
+					"name": "Transfer from User 1 Card 2 to User 1 Card 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Reverse transfer successful\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Transfer amount is correct\", function () {",
+									"    pm.expect(response.amount).to.eql(100.00);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fromCardId\": {{user1Card2Id}},\n    \"toCardId\": {{user1Card1Id}},\n    \"amount\": 100.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/transfers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"transfers"
+							]
+						}
+					}
+				},
+				{
+					"name": "Transfer to Other User's Card (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Transfer to other user's card fails\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fromCardId\": {{user1Card1Id}},\n    \"toCardId\": {{user2CardId}},\n    \"amount\": 50.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/transfers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"transfers"
+							]
+						}
+					}
+				},
+				{
+					"name": "Transfer with Insufficient Funds (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Transfer fails with insufficient funds\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fromCardId\": {{user1Card2Id}},\n    \"toCardId\": {{user1Card1Id}},\n    \"amount\": 5000.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/transfers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"transfers"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Card Blocking",
+			"item": [
+				{
+					"name": "Request Card Block (User 1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Block request created\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.collectionVariables.set(\"blockRequestId\", response.id);",
+									"pm.test(\"Block request status is pending\", function () {",
+									"    pm.expect(response.status).to.eql(\"PENDING\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cardId\": {{user1Card1Id}}\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/card-blocks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"card-blocks"
+							]
+						}
+					}
+				},
+				{
+					"name": "Admin Block Card Directly",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can block card directly\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Card is blocked\", function () {",
+									"    pm.expect(response.status).to.eql(\"BLOCKED\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards/{{user2CardId}}/admin-block",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards",
+								"{{user2CardId}}",
+								"admin-block"
+							]
+						}
+					}
+				},
+				{
+					"name": "User Cannot Block Card Directly (Security Test)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User cannot block card directly\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards/{{user1Card1Id}}/admin-block",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards",
+								"{{user1Card1Id}}",
+								"admin-block"
+							]
+						}
+					}
+				},
+				{
+					"name": "Admin Activate Blocked Card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can activate card\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Card is active\", function () {",
+									"    pm.expect(response.status).to.eql(\"ACTIVE\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards/{{user2CardId}}/activate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards",
+								"{{user2CardId}}",
+								"activate"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "7. Admin Operations",
+			"item": [
+				{
+					"name": "Get All Cards (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can view all cards\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response = pm.response.json();",
+									"pm.test(\"Cards list is not empty\", function () {",
+									"    pm.expect(response.content.length).to.be.greaterThan(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards"
+							]
+						}
+					}
+				},
+				{
+					"name": "User Cannot View All Cards (Security Test)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User cannot view all cards\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get User Balance by ID (Admin Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Admin can get user balance by ID\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Balance is correct\", function () {",
+									"    pm.expect(pm.response.text()).to.eql(\"1450.00\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards/balance/{{user1Id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards",
+								"balance",
+								"{{user1Id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "User Cannot Get Other User Balance (Security Test)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User cannot get other user balance\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user1Token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cards/balance/{{user2Id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cards",
+								"balance",
+								"{{user2Id}}"
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "adminToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user1Token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user2Token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user1Id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user2Id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user1Card1Id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user1Card2Id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user2CardId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "blockRequestId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

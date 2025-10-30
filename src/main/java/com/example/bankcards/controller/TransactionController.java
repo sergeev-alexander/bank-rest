@@ -95,4 +95,3 @@ public class TransactionController {
         return TransactionUtils.toDTO(transactionService.withdraw(cardId, request.getAmount()));
     }
 }
-

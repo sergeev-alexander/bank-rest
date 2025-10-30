@@ -10,4 +10,3 @@ public class NotFoundException extends BankCardsException {
         super(message);
     }
 }
-

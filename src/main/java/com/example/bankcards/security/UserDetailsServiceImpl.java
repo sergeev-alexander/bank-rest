@@ -1,6 +1,7 @@
 package com.example.bankcards.security;
 
 import com.example.bankcards.entity.User;
+import com.example.bankcards.exception.NotFoundException;
 import com.example.bankcards.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,16 +17,11 @@ import java.util.Collections;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
-
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    public User loadUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -33,11 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                getAuthorities(user)
-        );
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user));
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(User user) {

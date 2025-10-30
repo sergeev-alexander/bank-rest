@@ -1,6 +1,5 @@
-package com.example.bankcards.controller;
+package com.example.bankcards.integration_tests;
 
-import com.example.bankcards.BaseIntegrationTest;
 import com.example.bankcards.TestDataFactory;
 import com.example.bankcards.dto.CardBlockRequest;
 import com.example.bankcards.entity.CreateCardRequest;
@@ -19,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
-class CardBlockControllerTest extends BaseIntegrationTest {
+class CardBlockTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

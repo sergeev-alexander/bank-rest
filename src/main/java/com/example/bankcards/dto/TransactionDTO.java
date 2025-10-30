@@ -22,4 +22,3 @@ public class TransactionDTO {
     private BigDecimal amount;
     private LocalDateTime createdAt;
 }
-

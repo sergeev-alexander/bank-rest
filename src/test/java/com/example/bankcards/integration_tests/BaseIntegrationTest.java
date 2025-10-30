@@ -1,4 +1,4 @@
-package com.example.bankcards;
+package com.example.bankcards.integration_tests;
 
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,19 +8,21 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Testcontainers
 public abstract class BaseIntegrationTest {
 
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
-            .withDatabaseName("test_db")
-            .withUsername("test_user")
-            .withPassword("test_password");
+    static PostgreSQLContainer<?> postgres;
+
+    static {
+        postgres = new PostgreSQLContainer<>("postgres:15-alpine")
+                .withDatabaseName("test_db")
+                .withUsername("test_user")
+                .withPassword("test_password")
+                .withReuse(true);
+        postgres.start();
+    }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {

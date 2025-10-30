@@ -1,6 +1,5 @@
-package com.example.bankcards.controller;
+package com.example.bankcards.integration_tests;
 
-import com.example.bankcards.BaseIntegrationTest;
 import com.example.bankcards.TestDataFactory;
 import com.example.bankcards.entity.CreateCardRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
-class CardControllerTest extends BaseIntegrationTest {
+class CardTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

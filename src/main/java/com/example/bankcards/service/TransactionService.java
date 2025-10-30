@@ -31,4 +31,3 @@ public interface TransactionService {
 
     Transaction withdraw(Long cardId, BigDecimal amount);
 }
-
