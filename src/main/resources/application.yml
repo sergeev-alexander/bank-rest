@@ -33,5 +33,6 @@ app:
   jwt:
     secret: "${JWT_SECRET:12345678901234567890123456789012345678901234567890123456789012}"
     expiration: 86400000  # 24h
+    issuer: bank-rest
   encryption:
     secret: "${ENCRYPTION_SECRET:1234567890123456}"
