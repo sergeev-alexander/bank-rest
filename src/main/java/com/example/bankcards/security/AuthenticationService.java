@@ -14,6 +14,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service for user authentication operations.
+ * Handles user login and JWT token generation.
+ *
+ * @author Bank System Team
+ * @since 1.0.0
+ */
 @Service
 public class AuthenticationService {
 
@@ -30,6 +37,15 @@ public class AuthenticationService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Authenticates user credentials and generates JWT token.
+     *
+     * @param email user email
+     * @param password user password
+     * @return JWT response with token and user information
+     * @throws org.springframework.security.core.AuthenticationException if authentication fails
+     * @throws NotFoundException if user not found
+     */
     public JwtResponse authenticateUser(String email, String password) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(email, password));

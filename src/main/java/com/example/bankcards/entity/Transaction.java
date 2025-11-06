@@ -21,6 +21,14 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Entity representing a card transaction.
+ * Records deposits and withdrawals for individual cards.
+ * Automatically sets creation timestamp.
+ *
+ * @author Bank System Team
+ * @since 1.0.0
+ */
 @Entity
 @Table(name = "transactions")
 @Data
@@ -48,6 +56,13 @@ public class Transaction {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    /**
+     * Constructor for creating a transaction with automatic timestamp.
+     *
+     * @param card card associated with the transaction
+     * @param transactionType type of transaction (DEPOSIT or WITHDRAWAL)
+     * @param amount transaction amount
+     */
     public Transaction(Card card, TransactionType transactionType, BigDecimal amount) {
         this.card = card;
         this.transactionType = transactionType;
@@ -55,6 +70,9 @@ public class Transaction {
         this.createdAt = LocalDateTime.now();
     }
 
+    /**
+     * Sets creation timestamp before persisting if not already set.
+     */
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {

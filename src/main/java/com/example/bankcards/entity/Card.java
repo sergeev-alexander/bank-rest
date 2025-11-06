@@ -29,6 +29,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Entity representing a bank card.
+ * Contains card information including encrypted card number, balance, and status.
+ * Supports automatic timestamp management and card number encryption.
+ *
+ * @author Bank System Team
+ * @since 1.0.0
+ */
 @Entity
 @Table(name = "cards")
 @Data
@@ -70,12 +78,18 @@ public class Card {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    /**
+     * Sets creation and update timestamps before persisting.
+     */
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
+    /**
+     * Updates the timestamp before updating the entity.
+     */
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();

@@ -15,6 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for authentication operations.
+ * Handles user registration and login functionality.
+ *
+ * @author Bank System Team
+ * @since 1.0.0
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -28,6 +35,12 @@ public class AuthController {
         this.authenticationService = authenticationService;
     }
 
+    /**
+     * Registers a new user in the system.
+     *
+     * @param registrationRequest user registration data
+     * @return registered user data or error message
+     */
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationRequest registrationRequest) {
         try {
@@ -38,6 +51,12 @@ public class AuthController {
         }
     }
 
+    /**
+     * Authenticates a user and returns JWT token.
+     *
+     * @param loginRequest user login credentials
+     * @return JWT token response or error message
+     */
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {

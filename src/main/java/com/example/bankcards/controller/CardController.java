@@ -25,6 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * REST controller for card management operations.
+ * Provides endpoints for card creation, retrieval, blocking, and activation.
+ *
+ * @author Bank System Team
+ * @since 1.0.0
+ */
 @RestController
 @RequestMapping("/api/cards")
 public class CardController {
@@ -39,6 +46,13 @@ public class CardController {
         this.cardService = cardService;
     }
 
+    /**
+     * Gets a card by its identifier.
+     * Users can only access their own cards, admins can access any card.
+     *
+     * @param id card identifier
+     * @return card data
+     */
     @GetMapping("/id/{id}")
     public CardDTO getCardById(@PathVariable Long id) {
         if (!securityService.isAdmin()) {
@@ -48,6 +62,13 @@ public class CardController {
         return CardUtils.toDTO(cardService.findById(id));
     }
 
+    /**
+     * Gets a card by its number.
+     * Users can only access their own cards, admins can access any card.
+     *
+     * @param cardNumber card number
+     * @return card data
+     */
     @GetMapping("/number/{cardNumber}")
     public CardDTO getCardByNumber(@PathVariable String cardNumber) {
         Card card = cardService.findByCardNumber(cardNumber);
@@ -59,6 +80,18 @@ public class CardController {
         return CardUtils.toDTO(card);
     }
 
+    /**
+     * Gets all cards in the system with filtering (admin only).
+     *
+     * @param userId user ID filter
+     * @param status card status filter
+     * @param startDate creation start date filter
+     * @param endDate creation end date filter
+     * @param page page number
+     * @param size page size
+     * @param sort sorting parameters
+     * @return page of cards
+     */
     @GetMapping
     public Page<CardDTO> getAllCards(@RequestParam(required = false) Long userId,
                                      @RequestParam(required = false) CardStatus status,
@@ -76,6 +109,17 @@ public class CardController {
         return cardPage.map(CardUtils::toDTO);
     }
 
+    /**
+     * Gets current user's cards with filtering.
+     *
+     * @param status card status filter
+     * @param startDate creation start date filter
+     * @param endDate creation end date filter
+     * @param page page number
+     * @param size page size
+     * @param sort sorting parameters
+     * @return page of user's cards
+     */
     @GetMapping("/my-cards")
     public Page<CardDTO> getUserCards(@RequestParam(required = false) CardStatus status,
                                       @RequestParam(required = false)
@@ -93,6 +137,11 @@ public class CardController {
         return cards.map(CardUtils::toDTO);
     }
 
+    /**
+     * Gets current user's total balance across all cards.
+     *
+     * @return total balance
+     */
     @GetMapping("/my-balance")
     public BigDecimal getUserBalance() {
         Long currentUserId = securityService.getCurrentUserId();
@@ -125,24 +174,47 @@ public class CardController {
         return cardPage.map(CardUtils::toDTO);
     }
 
+    /**
+     * Creates a new card (admin only).
+     *
+     * @param request card creation request
+     * @return created card data
+     */
     @PostMapping
     public CardDTO createCard(@RequestBody @Valid CreateCardRequest request) {
         securityService.validateAdminAccess();
         return CardUtils.toDTO(cardService.createCard(request));
     }
 
+    /**
+     * Blocks a card by admin.
+     *
+     * @param id card identifier
+     * @return blocked card data
+     */
     @PostMapping("/{id}/admin-block")
     public CardDTO blockCardById(@PathVariable Long id) {
         securityService.validateAdminAccess();
         return CardUtils.toDTO(cardService.blockCardById(id));
     }
 
+    /**
+     * Activates a card (admin only).
+     *
+     * @param id card identifier
+     * @return activated card data
+     */
     @PostMapping("/{id}/activate")
     public CardDTO activateCardById(@PathVariable Long id) {
         securityService.validateAdminAccess();
         return CardUtils.toDTO(cardService.activateCard(id));
     }
 
+    /**
+     * Deletes a card (admin only).
+     *
+     * @param id card identifier
+     */
     @DeleteMapping("/{id}")
     public void deleteCardById(@PathVariable Long id) {
         securityService.validateAdminAccess();

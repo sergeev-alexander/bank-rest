@@ -21,6 +21,14 @@ import lombok.ToString;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Entity representing a money transfer between cards.
+ * Records transfers from one card to another with status tracking.
+ * Automatically sets creation timestamp and default status.
+ *
+ * @author Bank System Team
+ * @since 1.0.0
+ */
 @Entity
 @Table(name = "transfers")
 @Data
@@ -52,6 +60,14 @@ public class Transfer {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    /**
+     * Constructor for creating a transfer with automatic timestamp.
+     *
+     * @param fromCard source card
+     * @param toCard destination card
+     * @param amount transfer amount
+     * @param status transfer status
+     */
     public Transfer(Card fromCard, Card toCard, BigDecimal amount, TransferStatus status) {
         this.fromCard = fromCard;
         this.toCard = toCard;
@@ -60,6 +76,9 @@ public class Transfer {
         this.createdAt = LocalDateTime.now();
     }
 
+    /**
+     * Sets creation timestamp and default status before persisting.
+     */
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) {

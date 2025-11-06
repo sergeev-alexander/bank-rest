@@ -21,6 +21,14 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+/**
+ * Entity representing a system user.
+ * Contains user personal information, credentials, and role.
+ * Supports automatic timestamp management for creation and updates.
+ *
+ * @author Bank System Team
+ * @since 1.0.0
+ */
 @Entity
 @Table(name = "users")
 @Data
@@ -65,12 +73,18 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    /**
+     * Sets creation and update timestamps before persisting.
+     */
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
+    /**
+     * Updates the timestamp before updating the entity.
+     */
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();

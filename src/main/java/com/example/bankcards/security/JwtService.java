@@ -9,7 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
-
+/**
+ * Service for JWT token operations.
+ * Handles token generation, validation, and parsing using HMAC SHA-256 algorithm.
+ *
+ * @author Bank System Team
+ * @since 1.0.0
+ */
 @Component
 public class JwtService {
 
@@ -22,10 +28,21 @@ public class JwtService {
     @Value("${app.jwt.issuer}")
     private String issuer;
 
+    /**
+     * Creates signing key from the configured secret.
+     *
+     * @return HMAC SHA key for token signing
+     */
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
+    /**
+     * Generates JWT token for authenticated user.
+     *
+     * @param userDetails authenticated user details
+     * @return JWT token string
+     */
     public String generateToken(UserDetails userDetails) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + jwtExpirationMs);
@@ -39,10 +56,23 @@ public class JwtService {
                 .compact();
     }
 
+    /**
+     * Extracts username from JWT token.
+     *
+     * @param token JWT token
+     * @return username from token subject
+     */
     public String getUsernameFromToken(String token) {
         return parseClaims(token).getSubject();
     }
 
+    /**
+     * Validates JWT token against user details.
+     *
+     * @param token JWT token to validate
+     * @param userDetails user details to validate against
+     * @return true if token is valid, false otherwise
+     */
     public boolean validateToken(String token, UserDetails userDetails) {
         try {
             Claims claims = parseClaims(token);
@@ -55,6 +85,12 @@ public class JwtService {
         }
     }
 
+    /**
+     * Parses JWT token and extracts claims.
+     *
+     * @param token JWT token to parse
+     * @return token claims
+     */
     private Claims parseClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -63,6 +99,11 @@ public class JwtService {
                 .getBody();
     }
 
+    /**
+     * Gets the configured JWT issuer.
+     *
+     * @return JWT issuer string
+     */
     public String getIssuer() {
         return issuer;
     }
