@@ -139,6 +139,7 @@
                 <version>3.6.3</version>
                 <configuration>
                     <source>17</source>
+                    <taglet>17</taglet>
                     <encoding>UTF-8</encoding>
                     <charset>UTF-8</charset>
                     <docencoding>UTF-8</docencoding>
